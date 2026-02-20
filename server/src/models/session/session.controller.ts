@@ -29,4 +29,20 @@ export class SessionController {
       next(error);
     }
   };
+
+  roll = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const sessionId = req.cookies.sessionId;
+
+    if (!sessionId)
+      return res.status(400).json({ message: "No session cookie found" });
+
+    const result = await this.service.roll(sessionId);
+
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
 }

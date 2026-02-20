@@ -28,6 +28,38 @@ export function createSessionRouter(controller: SessionController) {
    *         description: Session details
    */
   router.get("/", controller.getSession);
+  /**
+   * @swagger
+   * /session/roll:
+   *   post:
+   *     summary: Roll the slot machine
+   *     tags: [Session]
+   *     responses:
+   *       200:
+   *         description: Roll result
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 combination:
+   *                   type: array
+   *                   items:
+   *                     type: string
+   *                     enum: [C, L, O, W]
+   *                   example: ["C", "C", "C"]
+   *                 win:
+   *                   type: boolean
+   *                   example: true
+   *                 credits:
+   *                   type: number
+   *                   example: 19
+   *       400:
+   *         description: No session cookie found
+   *       500:
+   *         description: Server error
+   */
+  router.post("/roll", controller.roll);
 
   return router;
 }
