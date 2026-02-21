@@ -3,8 +3,11 @@
 *Backend*
 
 Setup: Initialized a Node.js server using Express and TypeScript.
+
 Challenge: Faced issues with ts-node-dev and ES Modules compatibility.
+
 Solution: Migrated to tsx for better support of modern TypeScript features.
+
 Status: Server is running locally on port 5000 with CORS and Cookie-parser configured.
 
 Architecture Overview
@@ -12,8 +15,11 @@ Architecture Overview
 1. Session Module
 Each session is a stateful entity containing:
 id – UUID
+
 credits – Current balance (starts at 10)
+
 active – Boolean flag
+
 createdAt – Timestamp
 
  Architecture Decisions
@@ -73,7 +79,10 @@ Fully documented via Swagger (OpenAPI 3.0).
 Accessible at: /api-docs
 
 Method	Endpoint	Description
-POST	/session	- Creates new session (10 credits)
-GET	/session -	Returns current session state
-POST	/session/roll -	Executes spin & applies cheat logic
-POST	/session/cashout -	Cashes out credits & closes session
+POST	/session	- Creates new session (10 credits).
+
+GET	/session -	Returns current session state.
+
+POST	/session/roll -	Executes spin & applies cheat logic.
+
+POST	/session/cashout -	Cashes out credits & closes session.
