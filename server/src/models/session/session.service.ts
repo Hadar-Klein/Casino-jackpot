@@ -2,6 +2,7 @@ import { randomUUID } from "crypto";
 import type { Session } from "./session.model.js";
 import type { SessionStore } from "./session.store.interfase.js";
 import type { SlotMachineService } from "../slot-machine/slot.service.js";
+import { HttpError } from "../../shared/http-errors.js";
 
 export class SessionService {
   constructor(
@@ -36,10 +37,10 @@ export class SessionService {
   async roll(sessionId: string) {
     const session = await this.store.getById(sessionId);
     if (!session || !session.active) {
-      throw new Error("Invalid session");
+       throw new HttpError(400, "Invalid session");
     }
     if (session.credits <= 0) {
-      throw new Error("No credits left");
+      throw new HttpError(400, "No credits left");
     }
     session.credits -= 1;
     const gameResult = this.slotMachine.rollWithCheat(session.credits);
@@ -55,7 +56,7 @@ export class SessionService {
   async cashOut(sessionId: string) {
     const session = await this.store.getById(sessionId);
     if (!session || !session.active) {
-      throw new Error("Invalid session");
+      throw new HttpError(400, "Invalid session");
     }
     const payout = session.credits;
     session.active = false;

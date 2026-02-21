@@ -9,6 +9,7 @@ import { createSessionRouter } from "./models/session/session.routes.js";
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUI from "swagger-ui-express";
 import { SlotMachineService } from "./models/slot-machine/slot.service.js";
+import { errorHandler } from "./middlewares/error-handler.js";
 
 export const app: Express = express();
 
@@ -44,3 +45,4 @@ const service = new SessionService(strore, slotMachineService);
 const controller = new SessionController(service);
 
 app.use("/session", createSessionRouter(controller));
+app.use(errorHandler);
