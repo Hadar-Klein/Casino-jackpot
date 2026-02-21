@@ -1,18 +1,15 @@
 # Casino-jackpot
 
-Development Journey - Backend
+*Backend*
+
 Setup: Initialized a Node.js server using Express and TypeScript.
-
 Challenge: Faced issues with ts-node-dev and ES Modules compatibility.
-
 Solution: Migrated to tsx for better support of modern TypeScript features.
-
 Status: Server is running locally on port 5000 with CORS and Cookie-parser configured.
 
 Architecture Overview
 
 1. Session Module
-
 Each session is a stateful entity containing:
 id – UUID
 credits – Current balance (starts at 10)
@@ -53,9 +50,9 @@ Winning Rule: All three symbols must match.
 Server-Side Cheat Algorithm
 To maintain the house edge, a re-roll mechanism is applied server-side only.
 Balance-Based Logic:
-< 40 Credits → 100% fair random
-40–60 Credits → 30% chance to re-roll winning result
-> 60 Credits → 60% chance to re-roll winning result
+a. < 40 Credits → 100% fair random
+b. 40–60 Credits → 30% chance to re-roll winning result
+c. > 60 Credits → 60% chance to re-roll winning result
 
 The 1-credit cost is deducted before evaluation.
 The client is never aware of re-roll.
@@ -65,8 +62,7 @@ This ensures profitability while maintaining fair-play perception.
 3️. Cashout Feature
 Allows the player to Withdraw remaining credits, Close the active session and Clear session cookie.
 its Validates active session, Returns final payout and Deletes session from storage
-
-4.  Global Error Handling
+4. Global Error Handling
 
 Implemented centralized error management using:
  Custom HttpError Class that allows throwing controlled errors with status codes: throw new HttpError(400, "No credits left");
