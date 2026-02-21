@@ -31,18 +31,31 @@ export class SessionController {
   };
 
   roll = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const sessionId = req.cookies.sessionId;
+    try {
+      const sessionId = req.cookies.sessionId;
 
-    if (!sessionId)
-      return res.status(400).json({ message: "No session cookie found" });
+      if (!sessionId)
+        return res.status(400).json({ message: "No session cookie found" });
 
-    const result = await this.service.roll(sessionId);
+      const result = await this.service.roll(sessionId);
 
-    res.json(result);
-  } catch (error) {
-    next(error);
-  }
-};
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  };
 
+  cashOut = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const sessionId = req.cookies.sessionId;
+      if (!sessionId)
+        return res.status(400).json({ message: "No session cookie found" });
+
+      const payout = await this.service.cashOut(sessionId);
+      res.clearCookie("sessionId");
+      res.json({ payout });
+    } catch (error) {
+      next(error);
+    }
+  };
 }

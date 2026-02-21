@@ -61,5 +61,29 @@ export function createSessionRouter(controller: SessionController) {
    */
   router.post("/roll", controller.roll);
 
+  /**
+   * @swagger
+   * /session/cashout:
+   *   post:
+   *     summary: Cash out and close the current session
+   *     tags: [Session]
+   *     responses:
+   *       200:
+   *         description: Session closed and credits returned
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 payout:
+   *                   type: number
+   *                   example: 25
+   *       400:
+   *         description: No session cookie found
+   *       500:
+   *         description: Server error
+   */
+  router.post("/cashout", controller.cashOut);
+
   return router;
 }

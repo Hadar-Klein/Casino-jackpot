@@ -51,4 +51,15 @@ export class SessionService {
       credits: session.credits,
     };
   }
+
+  async cashOut(sessionId: string) {
+    const session = await this.store.getById(sessionId);
+    if (!session || !session.active) {
+      throw new Error("Invalid session");
+    }
+    const payout = session.credits;
+    session.active = false;
+    await this.store.delete(sessionId);
+    return payout;
+  }
 }
