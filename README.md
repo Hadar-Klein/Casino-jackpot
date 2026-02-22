@@ -1,6 +1,6 @@
 # Casino-jackpot
 
-*Backend*
+## Backend
 
 Setup: Initialized a Node.js server using Express and TypeScript.
 
@@ -87,9 +87,15 @@ POST	/session/roll -	Executes spin & applies cheat logic.
 
 POST	/session/cashout -	Cashes out credits & closes session.
 
+### Testing
+- Integration tests: `session.test.ts` — covers all API endpoints and edge cases
+- Unit tests: `slot.service.test.ts` — covers cheat algorithm with boundary conditions (39, 40, 60, 61 credits)
+
+Run tests: `npm test`
+
 -------------------------------------------------------------------------------------------------
 
-Frontend
+## Frontend
 
 Setup
 Initialized a React application using Vite with TypeScript for fast development and modern tooling.
@@ -139,3 +145,4 @@ Challenge: Keeping the animation in sync with async API responses without blocki
 Solution: useSlotAnimation starts the spin immediately and independently schedules the staged reveal using setTimeout, regardless of when the API responds.
 Challenge: Preventing stale credit display during animation.
 Solution: Credits are updated optimistically on spin start and corrected once the server response arrives at the end of the animation sequence.
+
