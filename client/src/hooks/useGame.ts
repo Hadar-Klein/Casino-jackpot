@@ -2,16 +2,19 @@ import { useEffect, useState } from "react";
 import { cashOut, createSession, roll } from "../api/api";
 
 export function useGame() {
-  const [credits, setCredits] = useState(0);
-  const [slot, setSlot] = useState(["x", "x", "x"]);
+  const [credits, setCredits] = useState(10);
+  const [slots, setSlots] = useState(["", "", ""]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [active, setActive] = useState(false);
 
   useEffect(() => {
     async function startGame() {
       try {
         const session = await createSession();
+        console.log(session);
         setCredits(session.credits);
+        setActive(true);
       } catch (err) {
         setError((err as Error).message);
       }
@@ -25,7 +28,7 @@ export function useGame() {
       setError(null);
 
       const result = await roll();
-      setSlot(result.combination);
+      setSlots(result.combination);
       setCredits(result.credits);
     } catch (err) {
       setError((err as Error).message);
@@ -38,21 +41,24 @@ export function useGame() {
     try {
       setLoading(true);
       setError(null);
-      await cashOut();
+      const payout = await cashOut();
       setCredits(0);
-      setSlot(["x", "x", "x"]);
+      setActive(false);
+      setSlots(["", "", ""]);
+      return payout.payout;
     } catch (err) {
       setError((err as Error).message);
     } finally {
       setLoading(false);
     }
-    return {
-      credits,
-      slot,
-      loading,
-      error,
-      handleRoll,
-      handleCashOut,
-    };
   }
+  return {
+    credits,
+    slots,
+    loading,
+    error,
+    active,
+    handleRoll,
+    handleCashOut,
+  };
 }
