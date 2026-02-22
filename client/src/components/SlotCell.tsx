@@ -3,12 +3,14 @@ interface SlotCellProps {
 }
 
 export function SlotCell({ value }: SlotCellProps) {
+  const isSpinning = value === "X";
+
   return (
     <div
       style={{
         width: "60px",
         height: "60px",
-        border: "1px solid black",
+        border: "2px solid black",
         borderRadius: "8px",
         display: "flex",
         alignItems: "center",
@@ -17,7 +19,15 @@ export function SlotCell({ value }: SlotCellProps) {
         fontFamily: "Times New Roman, Times, serif",
       }}
     >
-      {value}
+      <div
+        style={{
+          ...(isSpinning && {
+            animation: "spin 0.6s linear infinite",
+          }),
+        }}
+      >
+        {value}
+      </div>
     </div>
   );
 }
