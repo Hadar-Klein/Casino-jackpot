@@ -51,9 +51,15 @@ function App() {
         onCashOut={handleCashOutClick}
         disabled={isGameDisabled}
       />
-      {!game.active && (
-        <button onClick={() => window.location.reload()}>Start New Game</button>
-      )}
+      {!game.active ||
+        (animation.displayCredits === 0 && (
+          <button
+            style={{ marginTop: "10px" }}
+            onClick={() => window.location.reload()}
+          >
+            Start New Game
+          </button>
+        ))}
       {game.error && (
         <div style={{ color: "red", marginTop: "10px" }}>{game.error}</div>
       )}
