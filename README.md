@@ -86,3 +86,56 @@ GET	/session -	Returns current session state.
 POST	/session/roll -	Executes spin & applies cheat logic.
 
 POST	/session/cashout -	Cashes out credits & closes session.
+
+-------------------------------------------------------------------------------------------------
+
+Frontend
+
+Setup
+Initialized a React application using Vite with TypeScript for fast development and modern tooling.
+Tech Stack: React 18, TypeScript, Vite
+Structure: Organized as part of the mono-repo under /client
+
+Architecture Overview
+Component Structure
+The UI is split into small, focused components following the Single Responsibility Principle:
+
+App.tsx – Root component, orchestrates game state and animation hooks
+SlotBoard – Renders the three slot cells in a row
+SlotCell – Individual slot cell; handles spinning animation when value is "X"
+Controls – Roll and Cash Out buttons with disabled state management
+CreditsDisplay – Displays the current credit balance
+
+Custom Hooks
+Business logic and side effects are encapsulated in two dedicated hooks:
+
+useGame – Manages all server communication and game state (credits, slots, session lifecycle). Initializes a session on mount via POST /session.
+useSlotAnimation – Manages the visual animation layer independently from the server state. Decouples what the user sees from what the server returns, enabling a staged reveal animation (slot 1 → slot 2 → slot 3) with configurable delays.
+
+Separation of Concerns
+A deliberate architectural decision was made to separate game state from display state:
+
+useGame holds the true server state
+useSlotAnimation holds the display state shown to the user
+
+This allows the spin animation to play out naturally even after the API response has already returned, providing a better user experience.
+API Layer
+All server calls are abstracted in api.ts, keeping components and hooks free of fetch logic. Each function maps to a single endpoint and throws on non-OK responses, enabling clean error handling upstream.
+Optimistic UI
+When a roll is initiated, the credit counter is decremented immediately on the client (before the server responds). If the request fails, the credit is restored — keeping the UI responsive and consistent.
+Error Handling
+Errors from the API are caught at the hook level and surfaced via an error state field, displayed inline in the UI without crashing the application.
+
+Game Flow
+
+On mount → POST /session creates a new session with 10 credits
+User clicks Roll → animation starts, API call is made, slots reveal sequentially
+If credits reach 0 → buttons are disabled, "Start New Game" button appears
+User clicks Cash Out → POST /session/cashout is called, payout is shown via alert, session ends
+
+Key Challenges & Solutions
+
+Challenge: Keeping the animation in sync with async API responses without blocking the UI.
+Solution: useSlotAnimation starts the spin immediately and independently schedules the staged reveal using setTimeout, regardless of when the API responds.
+Challenge: Preventing stale credit display during animation.
+Solution: Credits are updated optimistically on spin start and corrected once the server response arrives at the end of the animation sequence.
