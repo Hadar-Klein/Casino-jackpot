@@ -1,6 +1,7 @@
 # Casino-jackpot
 
-Development Journey - Backend
+*Backend*
+
 Setup: Initialized a Node.js server using Express and TypeScript.
 
 Challenge: Faced issues with ts-node-dev and ES Modules compatibility.
@@ -9,32 +10,79 @@ Solution: Migrated to tsx for better support of modern TypeScript features.
 
 Status: Server is running locally on port 5000 with CORS and Cookie-parser configured.
 
- Session Module Implementation
- 
-Feature Overview
+Architecture Overview
+
+1. Session Module
 Each session is a stateful entity containing:
-id: Unique identifier (UUID).
-credits: Current balance for the session.
-active: Boolean flag indicating if the session is playable.
-createdAt: Timestamp for auditing and cleanup.
+id – UUID
 
-Architecture Decisions
-Separation of Concerns:
-Controller: Handles the HTTP layer and cookie management.
-Service: Contains pure business logic.
-Store: Manages data persistence.
+credits – Current balance (starts at 10)
 
-Storage Abstraction: Defined a SessionStore interface. This allows the system to switch from the current In-Memory store to a persistent Redis or Database implementation without touching the business logic.
+active – Boolean flag
 
-Dependency Injection (DI): The SessionService receives its store instance via the constructor, making the code  testable and modular.
+createdAt – Timestamp
 
-Async-first Design: All operations are asynchronous, ensuring the architecture is ready for real-world, high-latency database integrations.
+ Architecture Decisions
+ Separation of Concerns
+ * Controller – Handles HTTP layer & cookie lifecycle
+ * Service – Contains business logic
+ * Store – Manages persistence
 
-Session HTTP Integration
-SessionController: Acts as the entry point; it communicates with the service and manages the session cookie lifecycle.
-session.routes.ts: Decoupled routing file that defines the feature’s API surface.
+ Storage Abstraction
+ * Defined a SessionStore interface.
+ * Current implementation: In-Memory Store
+ * Future-ready for:Redis, PostgreSQL or MongoDB whiout changes required in business logic to switch storage engines.
 
- API Documentation (Swagger)
-Interactive UI: Integrated Swagger (OpenAPI 3.0) to provide a live testing environment for the API.
-Endpoint: Accessible at /api-docs when the server is running.
-Purpose: Facilitates smooth integration with the Frontend and serves as a "living document" for the API contract.
+ Dependency Injection (DI)
+ SessionService receives:SessionStore, SlotMachineService
+ This allows: Easy mocking for unit tests and Full decoupling between modules
+
+ Async-First Design
+All operations are asynchronous to support:
+* Real database integration
+* High latency environments
+* Scalability
+
+Slot Machine Module
+Encapsulated game engine responsible for:
+1.  Symbols & Rewards
+Symbol	Reward
+C	10
+L	20
+O	30
+W	40
+Winning Rule: All three symbols must match.
+
+Server-Side Cheat Algorithm
+To maintain the house edge, a re-roll mechanism is applied server-side only.
+Balance-Based Logic:
+a. < 40 Credits → 100% fair random
+b. 40–60 Credits → 30% chance to re-roll winning result
+c. > 60 Credits → 60% chance to re-roll winning result
+
+The 1-credit cost is deducted before evaluation.
+The client is never aware of re-roll.
+Only winning combinations may be re-evaluated.
+This ensures profitability while maintaining fair-play perception.
+
+3️. Cashout Feature
+Allows the player to Withdraw remaining credits, Close the active session and Clear session cookie.
+its Validates active session, Returns final payout and Deletes session from storage
+4. Global Error Handling
+
+Implemented centralized error management using:
+ Custom HttpError Class that allows throwing controlled errors with status codes: throw new HttpError(400, "No credits left");
+ Global Error Middleware Handles all application errors , Returns proper HTTP status codes, Prevents leaking internal stack traces, Ensures consistent API responses
+
+ API Endpoints
+Fully documented via Swagger (OpenAPI 3.0).
+Accessible at: /api-docs
+
+Method	Endpoint	Description
+POST	/session	- Creates new session (10 credits).
+
+GET	/session -	Returns current session state.
+
+POST	/session/roll -	Executes spin & applies cheat logic.
+
+POST	/session/cashout -	Cashes out credits & closes session.
