@@ -2,14 +2,14 @@ import type { Express } from "express";
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import { MemorySessionStore } from "./infrastructure/store/memory.session.store.js";
-import { SessionService } from "./models/session/session.service.js";
-import { SessionController } from "./models/session/session.controller.js";
-import { createSessionRouter } from "./models/session/session.routes.js";
+import { MemorySessionStore } from "./infrastructure/store/memory.session.store";
+import { SessionService } from "./models/session/session.service";
+import { SessionController } from "./models/session/session.controller";
+import { createSessionRouter } from "./models/session/session.routes";
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUI from "swagger-ui-express";
-import { SlotMachineService } from "./models/slot-machine/slot.service.js";
-import { errorHandler } from "./middlewares/error-handler.js";
+import { SlotMachineService } from "./models/slot-machine/slot.service";
+import { errorHandler } from "./middlewares/error-handler";
 
 export const app: Express = express();
 

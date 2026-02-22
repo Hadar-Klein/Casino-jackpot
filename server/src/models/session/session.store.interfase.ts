@@ -1,9 +1,8 @@
-import type { Session } from "./session.model.ts";
-
+import type { Session } from "./session.model";
 
 export interface SessionStore {
- create(session: Session): Promise<void>;
+  create(session: Session): Promise<void>;
   getById(id: string): Promise<Session | null>;
   update(session: Session): Promise<void>;
   delete(id: string): Promise<void>;
-}   
+}

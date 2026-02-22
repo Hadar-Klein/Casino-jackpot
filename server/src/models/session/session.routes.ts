@@ -1,6 +1,6 @@
 // src/modules/session/session.routes.ts
 import express from "express";
-import { SessionController } from "./session.controller.js";
+import { SessionController } from "./session.controller";
 
 export function createSessionRouter(controller: SessionController) {
   const router = express.Router();

@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import { SessionService } from "./session.service.js";
+import { SessionService } from "./session.service";
 
 export class SessionController {
   constructor(private readonly service: SessionService) {}

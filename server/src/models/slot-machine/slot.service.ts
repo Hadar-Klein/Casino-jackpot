@@ -1,5 +1,5 @@
-import { CHEAT_CONFIG, rewards, symbols } from "./slot.constants.js";
-import type { SlotSymbol } from "./slot.type.js";
+import { CHEAT_CONFIG, rewards, symbols } from "./slot.constants";
+import type { SlotSymbol } from "./slot.type";
 
 export class SlotMachineService {
   private randomSymbol(): SlotSymbol {

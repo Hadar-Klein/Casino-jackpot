@@ -1,5 +1,5 @@
-import type { Session } from "../../models/session/session.model.js";
-import type { SessionStore } from "../../models/session/session.store.interfase.js";
+import type { Session } from "../../models/session/session.model.ts";
+import type { SessionStore } from "../../models/session/session.store.interfase.ts";
 
 export class MemorySessionStore implements SessionStore {
   private sesssion = new Map<string, Session>();
